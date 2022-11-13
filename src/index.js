@@ -68,6 +68,8 @@ class Game extends React.Component {
       history: [
         {
           squares: Array(9).fill(null),
+          cols: Array(9).fill(null),
+          rows: Array(9).fill(null),
         },
       ],
       stepNumber: 0,
@@ -76,6 +78,9 @@ class Game extends React.Component {
   }
 
   handleClick(i) {
+    const rowMap = [1, 1, 1, 2, 2, 2, 3, 3, 3];
+    const colMap = [1, 2, 3, 1, 2, 3, 1, 2, 3];
+
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     // create copy of the squares array to edit instead of editing OG
@@ -89,6 +94,8 @@ class Game extends React.Component {
       history: history.concat([
         {
           squares: squares,
+          cols: colMap[i],
+          rows: rowMap[i],
         },
       ]),
       stepNumber: history.length,
@@ -107,11 +114,14 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    console.log("(col, row): (" + current.cols + "," + current.rows + ")");
 
     // step is current history element value, which we don't use
     // move is current history element index
     const moves = history.map((step, move) => {
-      const desc = move ? "Go to move #" + move : "Go to game start";
+      const desc = move
+        ? "Go to move #" + move + " @ (" + step.cols + ", " + step.rows + ")"
+        : "Go to game start";
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
