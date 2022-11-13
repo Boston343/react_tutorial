@@ -39,6 +39,16 @@ class Board extends React.Component {
   }
 
   render() {
+    // https://reactgo.com/react-for-loop/
+    // const boardSquares = [];
+    // for (let row=0; row<3; row++) {
+    //   const boardRow = [];
+    //   for (let col=0; col<3; col++) {
+    //     boardRow.push()
+    //   }
+    //   </div>
+    // }
+
     return (
       <div>
         <div className="board-row">
@@ -123,7 +133,9 @@ class Game extends React.Component {
         : "Go to game start";
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button onClick={() => this.jumpTo(move)}>
+            {move === this.state.stepNumber ? <strong>{desc}</strong> : desc}
+          </button>
         </li>
       );
     });
