@@ -2,46 +2,51 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-class Square extends React.Component {
-  render() {
-    let squareClasses = "square";
-    if (this.props.winningSquare) {
-      squareClasses = squareClasses + " square-winning";
-    }
-    return (
-      <button
-        className={squareClasses}
-        onClick={() => {
-          this.props.onClick();
-        }}
-      >
-        {this.props.value}
-      </button>
-    );
-  }
-}
+// class Square extends React.Component {
+//   render() {
+//     let squareClasses = "square";
+//     if (this.props.winningSquare) {
+//       squareClasses = squareClasses + " square-winning";
+//     }
+//     return (
+//       <button
+//         className={squareClasses}
+//         onClick={() => {
+//           this.props.onClick();
+//         }}
+//       >
+//         {this.props.value}
+//       </button>
+//     );
+//   }
+// }
 
 // function component, simpler for components that only contain a "render" method
 // it just takes props as input and returns what should be rendered
 // Function components are less tediosu and many components can be expressed this way
-// function Square(props) {
-//   return (
-//     <button className="square" onClick={props.onClick}>
-//       <strong>{props.value}</strong>
-//     </button>
-//   );
-// }
+function Square(props) {
+  let squareClasses = "square";
+  if (props.winningSquare) {
+    squareClasses = squareClasses + " square-winning";
+  }
+  return (
+    <button
+      className={squareClasses}
+      onClick={() => {
+        props.onClick();
+      }}
+    >
+      {props.value}
+    </button>
+  );
+}
 
 class Board extends React.Component {
   renderSquare(i) {
     // if there is a winner, we need to give different value to winning squares
     let winningSquare = false;
     if (this.props.win) {
-      for (let j = 0; j < 3; j++) {
-        if (this.props.win[j] === i) {
-          winningSquare = true;
-        }
-      }
+      winningSquare = this.props.win.includes(i);
     }
 
     return (
@@ -179,7 +184,11 @@ class Game extends React.Component {
       status = "Winner: " + winner.player;
       // this.setState((history[this.state.stepNumber].win = winner.squares));
     } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      if (this.state.stepNumber === 9) {
+        status = "It's a draw!";
+      } else {
+        status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      }
     }
 
     const swapOrder = (
