@@ -4,9 +4,13 @@ import "./index.css";
 
 class Square extends React.Component {
   render() {
+    let squareClasses = "square";
+    if (this.props.winningSquare) {
+      squareClasses = squareClasses + " square-winning";
+    }
     return (
       <button
-        className="square"
+        className={squareClasses}
         onClick={() => {
           this.props.onClick();
         }}
@@ -30,20 +34,21 @@ class Square extends React.Component {
 
 class Board extends React.Component {
   renderSquare(i) {
-    var valueProp = this.props.squares[i];
     // if there is a winner, we need to give different value to winning squares
+    let winningSquare = false;
     if (this.props.win) {
       for (let j = 0; j < 3; j++) {
         if (this.props.win[j] === i) {
-          valueProp = "W";
+          winningSquare = true;
         }
       }
     }
 
     return (
       <Square
-        value={valueProp} // pass value prop to Square component
+        value={this.props.squares[i]} // pass value prop to Square component
         onClick={() => this.props.onClick(i)} // pass onClick prop to Square component
+        winningSquare={winningSquare} // let square know if it is a winner
       />
     );
   }
