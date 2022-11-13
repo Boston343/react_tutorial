@@ -72,6 +72,7 @@ class Game extends React.Component {
       ],
       stepNumber: 0,
       xIsNext: true,
+      sortDescending: true,
     };
   }
 
@@ -108,6 +109,12 @@ class Game extends React.Component {
     });
   }
 
+  swapOrder() {
+    this.setState({
+      sortDescending: !this.state.sortDescending,
+    });
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -115,7 +122,7 @@ class Game extends React.Component {
 
     // step is current history element value
     // move is current history element index
-    const moves = history.map((step, move) => {
+    let moves = history.map((step, move) => {
       const desc = move
         ? "Go to move #" + move + " @ (" + step.cols + ", " + step.rows + ")"
         : "Go to game start";
@@ -128,12 +135,23 @@ class Game extends React.Component {
       );
     });
 
+    // reverse the history moves order if we need to sort by ascending
+    if (!this.state.sortDescending) {
+      moves.reverse();
+    }
+
     let status;
     if (winner) {
       status = "Winner: " + winner;
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
+
+    const swapOrder = (
+      <button onClick={() => this.swapOrder()}>
+        {this.state.sortDescending ? "Sort Ascending" : "Sort Descending"}
+      </button>
+    );
 
     return (
       <div className="game">
@@ -144,6 +162,7 @@ class Game extends React.Component {
           />
         </div>
         <div className="game-info">
+          <div>{swapOrder}</div>
           <div>{status}</div>
           <ol>{moves}</ol>
         </div>
